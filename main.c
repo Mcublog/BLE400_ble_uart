@@ -36,7 +36,6 @@
 #include "app_uart.h"
 #include "app_util_platform.h"
 #include "bsp.h"
-#include "bsp_btn_ble.h"
 #include "nrf_delay.h"
 
 #define IS_SRVC_CHANGED_CHARACT_PRESENT 0                                           /**< Include the service_changed characteristic. If not enabled, the server's database cannot be changed for the lifetime of the device. */
@@ -231,10 +230,6 @@ static void sleep_mode_enter(void)
     uint32_t err_code = bsp_indication_set(BSP_INDICATE_IDLE);
     APP_ERROR_CHECK(err_code);
 
-    // Prepare wakeup buttons.
-    err_code = bsp_btn_ble_sleep_mode_prepare();
-    APP_ERROR_CHECK(err_code);
-
     // Go to system-off mode (this function will not return; wakeup will cause a reset).
     err_code = sd_power_system_off();
     APP_ERROR_CHECK(err_code);
@@ -320,9 +315,7 @@ static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
     ble_conn_params_on_ble_evt(p_ble_evt);
     ble_nus_on_ble_evt(&m_nus, p_ble_evt);
     on_ble_evt(p_ble_evt);
-    ble_advertising_on_ble_evt(p_ble_evt);
-    bsp_btn_ble_on_ble_evt(p_ble_evt);
-    
+    ble_advertising_on_ble_evt(p_ble_evt);   
 }
 
 
@@ -504,9 +497,6 @@ static void buttons_leds_init(bool * p_erase_bonds)
     uint32_t err_code = bsp_init(BSP_INIT_LED,
                                  APP_TIMER_TICKS(100, APP_TIMER_PRESCALER), 
                                  bsp_event_handler);
-    APP_ERROR_CHECK(err_code);
-
-    err_code = bsp_btn_ble_init(NULL, &startup_event);
     APP_ERROR_CHECK(err_code);
 
     *p_erase_bonds = (startup_event == BSP_EVENT_CLEAR_BONDING_DATA);

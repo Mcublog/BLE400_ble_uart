@@ -30,7 +30,7 @@
 /* all LEDs are lit when GPIO is low */
 #define LEDS_INV_MASK  LEDS_MASK
 
-#define BUTTONS_NUMBER 2
+#define BUTTONS_NUMBER 0
 
 #define BUTTON_START   16
 #define BUTTON_1       16
