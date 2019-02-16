@@ -502,6 +502,17 @@ static void buttons_leds_init(bool * p_erase_bonds)
     *p_erase_bonds = (startup_event == BSP_EVENT_CLEAR_BONDING_DATA);
 }
 
+/**@brief Init LED and button
+ */
+static void led_and_button_init(void)
+{
+    uint32_t i = 0;
+    
+    nrf_gpio_range_cfg_output(LED_START, LED_STOP);
+    for (i = LED_START; i <= LED_STOP; i++) nrf_gpio_pin_set(i);
+    
+    nrf_gpio_range_cfg_input(BUTTON_START, BUTTON_STOP, NRF_GPIO_PIN_PULLUP);
+}
 
 /**@brief Function for placing the application in low power state while waiting for events.
  */
@@ -523,7 +534,8 @@ int main(void)
     // Initialize.
     APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, false);
     uart_init();
-    buttons_leds_init(&erase_bonds);
+    led_and_button_init();
+    //buttons_leds_init(&erase_bonds);
     ble_stack_init();
     gap_params_init();
     services_init();
@@ -535,10 +547,7 @@ int main(void)
     err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
     APP_ERROR_CHECK(err_code);
     
-    nrf_gpio_pin_toggle(LED_1);
-    nrf_gpio_pin_toggle(LED_2);
-    nrf_gpio_pin_toggle(LED_3);
-    nrf_gpio_pin_toggle(LED_4);
+
     // Enter main loop.
     for (;;)
     {
