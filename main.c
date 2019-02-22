@@ -253,7 +253,8 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
             APP_ERROR_CHECK(err_code);
             break;
         case BLE_ADV_EVT_IDLE:
-            sleep_mode_enter();
+            ble_advertising_start(BLE_ADV_MODE_FAST);
+            //sleep_mode_enter();
             break;
         default:
             break;
